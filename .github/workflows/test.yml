@@ -5,6 +5,8 @@ name: Test
 on:
   workflow_dispatch:
   pull_request:
+  push:
+    branches: [main]
   workflow_call:
 
 permissions:
@@ -69,3 +71,25 @@ jobs:
           . ./build-tags.sh
           TAGS=$(tags_for test)
           go test -race -short -tags "$TAGS" ./api/... ./service/... ./sub/... ./database/... ./util/... ./logger/... ./network/...
+
+  frontend-build:
+    name: build pinned frontend
+    runs-on: ubuntu-26.04
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          submodules: recursive
+      - name: Verify frontend fork
+        run: |
+          test "$(git config -f .gitmodules --get submodule.frontend.url)" = "https://github.com/serbo26-lab/s-ui-frontend-node.git"
+          test -f frontend/package.json
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 26
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Build frontend
+        run: |
+          cd frontend
+          npm ci
+          npm run build
