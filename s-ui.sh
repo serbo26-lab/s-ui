@@ -85,7 +85,7 @@ before_show_menu() {
 # latest_tag prints the newest published release tag, resolved the same
 # way install.sh resolves it.
 latest_tag() {
-    curl -Ls "https://api.github.com/repos/alireza0/s-ui/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'
+    curl -Ls "https://api.github.com/repos/serbo26-lab/s-ui/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'
 }
 
 # run_installer runs install.sh taken from a release tag, never from the
@@ -107,7 +107,7 @@ run_installer() {
         return 1
     fi
     installer=$(mktemp)
-    if ! curl -fLs -o "$installer" "https://raw.githubusercontent.com/alireza0/s-ui/${tag}/install.sh" || [[ ! -s "$installer" ]] || ! bash -n "$installer"; then
+    if ! curl -fLs -o "$installer" "https://raw.githubusercontent.com/serbo26-lab/s-ui/${tag}/install.sh" || [[ ! -s "$installer" ]] || ! bash -n "$installer"; then
         rm -f "$installer"
         LOGE "Failed to download the installer for ${tag}, Please check whether the machine can connect Github"
         return 1
@@ -370,7 +370,7 @@ update_shell() {
         return 0
     fi
     tmp=$(mktemp /usr/bin/.s-ui.XXXXXX)
-    if ! wget -q -O "$tmp" "https://github.com/alireza0/s-ui/raw/${tag}/s-ui.sh" || ! bash -n "$tmp"; then
+    if ! wget -q -O "$tmp" "https://github.com/serbo26-lab/s-ui/raw/${tag}/s-ui.sh" || ! bash -n "$tmp"; then
         rm -f "$tmp"
         echo ""
         LOGE "Failed to download script, Please check whether the machine can connect Github"
